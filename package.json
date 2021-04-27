@@ -1,0 +1,11 @@
+{
+  "name": "desafio_chipax",
+  "version": "1.0.0",
+  "description": "desafio para postular al cargo de full stack software engineer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "bfneira",
+  "license": "ISC"
+}
