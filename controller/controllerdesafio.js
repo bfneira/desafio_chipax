@@ -22,6 +22,16 @@ const GetAllController = {
         console.log(Date(Date.now()).toString());
         res.send(response);
     },
+    async getdesafio2(req,res) {
+        //hora inicio 
+        console.log(Date(Date.now()).toString());
+        
+        var response = await controller_callrequest.getdesafio2(req,res);
+
+        //hora fin
+        console.log(Date(Date.now()).toString());
+        res.send(response);
+    },
 };
 
 module.exports = GetAllController;

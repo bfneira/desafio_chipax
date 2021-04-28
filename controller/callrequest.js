@@ -52,6 +52,72 @@ const CallApiRest = {
         //retorno la cantidad
         return IntCount;
     },
+    async getdesafio2(req,res) {
+
+        var StrResponseReq = "";
+        let urlLocation =  config.ApiUrlEpisode;
+        var IntCountLocation = 0;
+        //la primera vez UrlNextPage es la url por defecto
+        let UrlNextPage = urlLocation;
+
+        var NumLocation = 0;
+        while(true)
+        {
+           
+            //llamada de tipo await para esperar la respuesta de la api
+            var Response = await fnc.CallApiRequest(UrlNextPage,res);
+            //convierto la respuesta a JSON
+            let json = JSON.parse(Response);
+            //capturo la información que necesito del json response
+            var JsonInfo = json['info'];
+            UrlNextPage = JsonInfo['next'];
+            let UrlPrevPage = JsonInfo['prev'];
+            var JsonResults= json['results'];
+            //recorro el json results donde esta el array con la respuesta
+            for(let IndexB in JsonResults)
+            {
+                NumLocation ++;
+                //capturo el valor de name 
+                var StrNameEpisode = JsonResults[IndexB]['name'];
+                var JsonCharacters= JsonResults[IndexB]['characters'];
+
+                IntCountLocation = 0;
+                StrLocations = "{";
+                StrAllLocations = "";
+                for(let IndexC in JsonCharacters)
+                {
+                    var UrlCharacters = JsonCharacters[IndexC];
+
+                    //llamada de tipo await para esperar la respuesta de la api
+                    Response = await fnc.CallApiRequest(UrlCharacters,res);
+                    //convierto la respuesta a JSON
+                    json = JSON.parse(Response);
+                    //capturo la información que necesito del json response
+                    var StrCharacterName = json['name'];
+                    var StrLocationOrigin = json['origin']['name'];
+
+                    
+                    var n = StrAllLocations.indexOf("," + StrLocationOrigin + ",",0);
+
+                    if(n<0)
+                    {
+                        StrAllLocations = StrAllLocations + "," + StrLocationOrigin + ",";
+                        StrLocations = StrLocations + StrLocationOrigin + ",";
+                        IntCountLocation ++;
+                    }
+                }
+                StrLocations = StrLocations  + "}";
+                StrResponseReq =  StrResponseReq + "Episodio n " + NumLocation + ": " + StrNameEpisode + ", cantidad de location: " + IntCountLocation + " </br>" + StrLocations + " </br>"
+            }
+            if(UrlNextPage === null)
+            {
+                //cuando no quedas paginas para consultar, salimos del while
+                break;
+            }
+        }
+        //retorno la cantidad
+        return StrResponseReq;
+    },
 };
 
 //exporto el controlador

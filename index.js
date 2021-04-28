@@ -6,9 +6,12 @@ const app = express();
 const config = require('./config/config.js');
 
 //agrego las rutas
-const PlaceRoute = require('./routes/routesone');
+const routesone = require('./routes/routesone');
+const routestwo = require('./routes/routestwo');
+
 //llamada primer desafio
-app.use('/primerdesafio', PlaceRoute);
+app.use('/primerdesafio', routesone);
+app.use('/segundodesafio', routestwo);
 
 //test que enviar mensaje hola mundo
 app.get("/",function(req,res){
