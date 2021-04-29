@@ -32,7 +32,7 @@ Paquetes que se deben instalar en el proyecto:
 Una vez ejecutada la aplicación entrar al localhost con el puerto por defecto configurado `8080` y llamar la ejecución del primer desafio con el enlace [http://localhost:8080/primerdesafio](http://localhost:8080/primerdesafio/)
 
 <div style="text-align: center;" >
-<img src="img/desafio1.png" width=400 />
+<img src="img/desafio1.png" width=600 />
 </div>
 
 ## Desafio 2
@@ -40,5 +40,5 @@ Una vez ejecutada la aplicación entrar al localhost con el puerto por defecto c
 Una vez ejecutada la aplicación entrar al localhost con el puerto por defecto configurado `8080` y llamar la ejecución del segundo desafio con el enlace [http://localhost:8080/segundodesafio](http://localhost:8080/segundodesafio/)
 
 <div style="text-align: center;" >
-<img src="img/desafio1.png" width=400 />
+<img src="img/desafio2.png" width=600 />
 </div>
