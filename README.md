@@ -27,7 +27,7 @@ Paquetes que se deben instalar en el proyecto:
 * request `npm install request`.
 
 
-## Desafio 1
+## Desafio 1 : Char counter
 
 Una vez ejecutada la aplicación entrar al localhost con el puerto por defecto configurado `8080` y llamar la ejecución del primer desafio con el enlace [http://localhost:8080/primerdesafio](http://localhost:8080/primerdesafio/)
 
@@ -35,10 +35,22 @@ Una vez ejecutada la aplicación entrar al localhost con el puerto por defecto c
 <img src="img/desafio1.png" width=600 />
 </div>
 
-## Desafio 2
+## Desafio 2: Episode locations
 
 Una vez ejecutada la aplicación entrar al localhost con el puerto por defecto configurado `8080` y llamar la ejecución del segundo desafio con el enlace [http://localhost:8080/segundodesafio](http://localhost:8080/segundodesafio/)
 
 <div style="text-align: center;" >
 <img src="img/desafio2.png" width=600 />
 </div>
+
+## Estructura de la aplicación
+
+1. inicio: Archivo `index.js` ubicado en la raiz.
+2. routes: carpeta para definir las rutas de la aplicación, la raiz es `./routes/`
+    - `routesone.js`: ruta para el desafio 1.
+    - `routestwo.js`: ruta para el desafio 2.
+3. controller: Carpeta para definir los controladores, la raiz es `./controller/`
+    - `callrequest.js`: controlador con 2 metodos get para llamar el desafio 1 y getdesafio2 para invocar al segundo desafio.
+    - `controllerdesafio.js`: controlador para invocar a los controllers antes definidos en loop segun la petición.
+4. funciones: carpeta para definir las funciones de la aplicación, la raiz es `./function/`
+5. configuración: carpeta para definir las configuraciones, la raiz es `./config/`, aqui defino el puerto a utilizar y las urls de los apirest que se van a consumir.
