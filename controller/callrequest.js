@@ -3,120 +3,121 @@ const config = require('../config/config.js');
 
 const CallApiRest = {
     //metodo asincrono, recibe el tipo de llamada, caracter que debe buscar
-    async get(Type,CharSearch,res) {
-        let url = "";
-        //case para determinar la url del request
-        switch (Type) {
-            case "Location": url = config.ApiUrlLocation;
-            case "Episode": url = config.ApiUrlEpisode;
-            case "Character": url = config.ApiUrlCharacter;
-        }
-        //la primera vez UrlNextPage es la url por defecto
-        let UrlNextPage = url;
-        let IntCount = 0;
-        while(true)
+    async get(UrlReceive,CharSearch,res) {
+        try
         {
-            //llamada de tipo await para esperar la respuesta de la api
-            var Response = await fnc.CallApiRequest(UrlNextPage,res);
-            //convierto la respuesta a JSON
-            let json = JSON.parse(Response);
-            //capturo la información que necesito del json response
-            var JsonInfo = json['info'];
-            UrlNextPage = JsonInfo['next'];
-            let UrlPrevPage = JsonInfo['prev'];
-            var JsonResults= json['results'];
-            //recorro el json results donde esta el array con la respuesta
-            for(let IndexB in JsonResults)
+            let url = UrlReceive;
+            //la primera vez UrlNextPage es la url por defecto
+            let UrlNextPage = url;
+            let IntCount = 0;
+            while(true)
             {
-                //capturo el valor de name 
-                var StrValor = JsonResults[IndexB]['name'];
-                //todos los caracteres en mayuscula
-                StrValor = StrValor.toUpperCase();
-                //elimino espacios
-                StrValor = StrValor.replace(/ /gi, "");
-                for (var i = 0; i< StrValor.length; i++) {
-                    //recorro los caracteres
-                    var StrChar = StrValor.charAt(i);
-                    //busco la letra buscada
-                    if( StrChar == CharSearch) {
-                        IntCount ++; //aumento contador
-                     }  
-                } 
-            }
-            if(UrlNextPage === null)
-            {
-                //cuando no quedas paginas para consultar, salimos del while
-                break;
-            }
-        }
-        //retorno la cantidad
-        return IntCount;
-    },
-    async getdesafio2(req,res) {
-
-        var StrResponseReq = "";
-        let urlLocation =  config.ApiUrlEpisode;
-        var IntCountLocation = 0;
-        //la primera vez UrlNextPage es la url por defecto
-        let UrlNextPage = urlLocation;
-
-        var NumLocation = 0;
-        while(true)
-        {
-           
-            //llamada de tipo await para esperar la respuesta de la api
-            var Response = await fnc.CallApiRequest(UrlNextPage,res);
-            //convierto la respuesta a JSON
-            let json = JSON.parse(Response);
-            //capturo la información que necesito del json response
-            var JsonInfo = json['info'];
-            UrlNextPage = JsonInfo['next'];
-            let UrlPrevPage = JsonInfo['prev'];
-            var JsonResults= json['results'];
-            //recorro el json results donde esta el array con la respuesta
-            for(let IndexB in JsonResults)
-            {
-                NumLocation ++;
-                //capturo el valor de name 
-                var StrNameEpisode = JsonResults[IndexB]['name'];
-                var JsonCharacters= JsonResults[IndexB]['characters'];
-
-                IntCountLocation = 0;
-                StrLocations = "{";
-                StrAllLocations = "";
-                for(let IndexC in JsonCharacters)
+                //llamada de tipo await para esperar la respuesta de la api
+                var json = await fnc.CallApiRequest(UrlNextPage,res);
+                if(res.statusCode = 200)
                 {
-                    var UrlCharacters = JsonCharacters[IndexC];
 
-                    //llamada de tipo await para esperar la respuesta de la api
-                    Response = await fnc.CallApiRequest(UrlCharacters,res);
-                    //convierto la respuesta a JSON
-                    json = JSON.parse(Response);
-                    //capturo la información que necesito del json response
-                    var StrCharacterName = json['name'];
-                    var StrLocationOrigin = json['origin']['name'];
-
-                    
-                    var n = StrAllLocations.indexOf("," + StrLocationOrigin + ",",0);
-
-                    if(n<0)
+                }
+                //capturo la información que necesito del json response
+                if(Object.keys(json)[0]==='id') 
+                {
+                    UrlNextPage = null;
+                    IntCount = await fnc.ContarCaracteres(json['name'],CharSearch,res)
+                }
+                else
+                {
+                    var JsonInfo = json['info'];
+                    UrlNextPage = JsonInfo['next'];
+                    let UrlPrevPage = JsonInfo['prev'];
+                    var JsonResults= json['results'];
+                    //recorro el json results donde esta el array con la respuesta
+                    for(let IndexB in JsonResults)
                     {
-                        StrAllLocations = StrAllLocations + "," + StrLocationOrigin + ",";
-                        StrLocations = StrLocations + StrLocationOrigin + ",";
-                        IntCountLocation ++;
+                        //capturo el valor de name 
+                        var StrValor = JsonResults[IndexB]['name'];
+                        IntCount += await fnc.ContarCaracteres(StrValor,CharSearch,res)
                     }
                 }
-                StrLocations = StrLocations  + "}";
-                StrResponseReq =  StrResponseReq + "Episodio n " + NumLocation + ": " + StrNameEpisode + ", cantidad de location: " + IntCountLocation + " </br>" + StrLocations + " </br>"
+                
+                if(UrlNextPage === null)
+                {
+                    //cuando no quedas paginas para consultar, salimos del while
+                    break;
+                }
             }
-            if(UrlNextPage === null)
-            {
-                //cuando no quedas paginas para consultar, salimos del while
-                break;
-            }
+            //retorno la cantidad
+            return IntCount;
+        } catch (error) {
+            throw(error);
         }
-        //retorno la cantidad
-        return StrResponseReq;
+    }, 
+    async getdesafio2(UrlRequest,res) {
+        try
+        {
+            var StrResponseReq = "";
+            var IntCountLocation = 0;
+            //la primera vez UrlNextPage es la url por defecto
+            let UrlNextPage = UrlRequest;
+
+            var NumLocation = 0;
+            while(true)
+            {
+            
+                //llamada de tipo await para esperar la respuesta de la api
+                var json = await fnc.CallApiRequest(UrlNextPage,res);
+                
+                //capturo la información que necesito del json response
+                var JsonInfo = json['info'];
+                UrlNextPage = JsonInfo['next'];
+                let UrlPrevPage = JsonInfo['prev'];
+                var JsonResults= json['results'];
+                //recorro el json results donde esta el array con la respuesta
+                for(let IndexB in JsonResults)
+                {
+                    NumLocation ++;
+                    //capturo el valor de name 
+                    var StrNameEpisode = JsonResults[IndexB]['name'];
+                    var JsonCharacters= JsonResults[IndexB]['characters'];
+
+                    IntCountLocation = 0;
+                    StrLocations = "{";
+                    StrAllLocations = "";
+                    StrAllLocationsIde = "";
+                    for(let IndexC in JsonCharacters)
+                    {
+                        var n = 0;
+                        var UrlCharacters = JsonCharacters[IndexC];
+                        //llamada de tipo await para esperar la respuesta de la api
+                        json = await fnc.CallApiRequest(UrlCharacters,res);
+                         //capturo la información que necesito del json response
+                        var StrCharacterName = json['name'];
+                        var StrLocationOrigin = json['origin']['name'];
+
+                        n = StrAllLocationsIde.indexOf("," +  json['origin']['name'] + ",",0);
+                        if(n<0)
+                        {
+                            StrLocations = StrLocations + StrLocationOrigin + ",";
+                            IntCountLocation = IntCountLocation + 1;
+                            StrAllLocationsIde = StrAllLocationsIde + "," + json['origin']['name'] + ","
+                        }
+                    }
+                    StrLocations = StrLocations  + "}";
+                    StrResponseReq =  StrResponseReq + "Episodio n " + NumLocation + ": " + StrNameEpisode;
+                    StrResponseReq =  StrResponseReq + ", cantidad de location: " + IntCountLocation;
+                    StrResponseReq =  StrResponseReq + " </br>" + StrLocations + " </br>";
+                }
+                if(UrlNextPage === null)
+                {
+                    //cuando no quedas paginas para consultar, salimos del while
+                    break;
+                }
+            }
+            //retorno la cantidad
+            return StrResponseReq;
+        
+        } catch (error) {
+            throw(error);
+        }
     },
 };
 
