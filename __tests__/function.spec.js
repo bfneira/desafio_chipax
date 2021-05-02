@@ -19,7 +19,7 @@ const controller_callrequest = require("../controller/callrequest");
     req = "https://rickandmortyapi.com/api/episode/27"
     const res = mockResponse();
 
-    intCount = await controller_callrequest.get(req,"E",res);
+    intCount = await controller_callrequest.getdesafio1(req,"E",res);
 
     expect(intCount).toBe(1);
     done();

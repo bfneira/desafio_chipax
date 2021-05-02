@@ -8,9 +8,6 @@ const GetAllController = {
         try
         {
             var DtaInicio = new Date().getTime();
-
-            var response = "";
-            var intCount = "";
             let TypeCall = ['Location','Episode','Character'];
             let charSearch = ['I','E','C'];
 

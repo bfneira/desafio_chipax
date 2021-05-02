@@ -9,7 +9,8 @@ const FncFunction = {
                 {
                     url: url,
                     method: 'GET',
-                    Headers: { 'Accept': 'application/json','Accept-charset': 'utf-8',}
+                    Headers: { 'Accept': 'application/json','Accept-charset': 'utf-8',},
+                    pool: {maxSockets: 400}
                 }
             //llamada de tipo await para esperar respuesta, se enviar la configuración de la llamada
             var Response = await call(Options);
