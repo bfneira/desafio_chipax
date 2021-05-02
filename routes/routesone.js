@@ -3,7 +3,7 @@ const router = express.Router();
 //referencia controlador
 const GetAllController = require("../controller/controllerdesafio");
 //llamada y su controlador
-router.get("/", GetAllController.get);
+router.get("/", GetAllController.getdesafio1);
 
 //exporto la ruta
 module.exports = router;

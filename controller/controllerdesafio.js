@@ -3,7 +3,7 @@ const config = require('../config/config.js');
 const controller_callrequest = require("../controller/callrequest");
 
 const GetAllController = {
-    async get(req,res) {
+    async getdesafio1(req,res) {
         //hora inicio 
         try
         {
@@ -13,6 +13,8 @@ const GetAllController = {
             var intCount = "";
             let TypeCall = ['Location','Episode','Character'];
             let charSearch = ['I','E','C'];
+
+            var promise = [];
 
             for (var i = 0; i < TypeCall.length; i++) 
             {
@@ -29,38 +31,72 @@ const GetAllController = {
                         url = config.ApiUrlCharacter;
                         break;
                 }
-                intCount = await controller_callrequest.get(url,charSearch[i],res);
-                response += "La letra " + charSearch[i] + " esta " + intCount + " en las " + TypeCall[i] + ". </br>";
+
+                promise.push(new Promise((resolve, reject) => {
+                    resolve(controller_callrequest.getdesafio1(url,charSearch[i],TypeCall[i],res));
+                }));
             }
 
-            //hora fin
-            var DtaFin= new Date().getTime();
-            var calculo = await fnc.CalcularTiempo(DtaInicio,DtaFin);
-            console.log(calculo);
-            res.send("Tiempo de ejecución: " + calculo + " <br><br> Respuesta: <br> " +  response);
+            Promise.all(promise).then(values => {
+                var DtaFin= new Date().getTime();
+                var timeDiff = Math.round((DtaFin-DtaInicio)/ 1000);
+            
+                var calculo  = "";
+                if(timeDiff<60)
+                {
+                    calculo = timeDiff + " segundos";
+                }
+                else
+                {
+                    var seconds = Math.round(timeDiff % 60);
+                    timeDiff = Math.floor(timeDiff / 60);
+                    var minutes = Math.round(timeDiff % 60);
+                    calculo = minutes + " minutos " + seconds + " segundos";
+                }
+    
+                respuesta = values.toString(); 
+                res.send("Tiempo de ejecución: " + calculo + " <br><br> Respuesta: <br> " +  respuesta);
+            });
         } catch (error) {
             res.send(error);
         }
     },
     async getdesafio2(req,res) {
-        try
-        {
-            //hora inicio 
-            var DtaInicio = new Date().getTime();
-            
-            var url = config.ApiUrlEpisode;
-           // url = "https://rickandmortyapi.com/api/episode/28";
-            var response = await controller_callrequest.getdesafio2(url,res);
+        
 
-            //hora fin
-            var DtaFin= new Date().getTime();
-            var calculo = await fnc.CalcularTiempo(DtaInicio,DtaFin);
-            console.log(calculo);
-            res.send("Tiempo de ejecución: " + calculo + " <br><br> Respuesta: <br> " +  response);
-   
-        } catch (error) {
-            res.send(error);
+        var ArrEpisode = await controller_callrequest.CantEpisode(config.ApiUrlEpisode,res);
+        var DtaInicio = new Date().getTime();
+        var promise = [];
+
+       for (var i = 0; i < ArrEpisode.length -1; i++) {
+            promise.push(new Promise((resolve, reject) => {
+                var url = config.ApiUrlEpisode;
+                url = "https://rickandmortyapi.com/api/episode/" + ArrEpisode[i];
+                resolve(controller_callrequest.getdesafio2(url,i +1,res));
+            }));
         }
+
+        var respuesta ="";
+        Promise.all(promise).then(values => {
+            var DtaFin= new Date().getTime();
+            var timeDiff = Math.round((DtaFin-DtaInicio)/ 1000);
+        
+            var calculo  = "";
+            if(timeDiff<60)
+            {
+                calculo = timeDiff + " segundos";
+            }
+            else
+            {
+                var seconds = Math.round(timeDiff % 60);
+                timeDiff = Math.floor(timeDiff / 60);
+                var minutes = Math.round(timeDiff % 60);
+                calculo = minutes + " minutos " + seconds + " segundos";
+            }
+
+            respuesta = values.toString(); 
+            res.send("Tiempo de ejecución: " + calculo + " <br><br> Respuesta: <br> " +  respuesta);
+        });
     },
 };
 
