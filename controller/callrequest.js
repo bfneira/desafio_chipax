@@ -1,6 +1,6 @@
 const fnc = require('../function/function');
 const config = require('../config/config.js');
-const controller_callrequest = require("./ControllerPersonajes");
+const controller_callrequest = require("./ControllerOther");
 
 const CallApiRest = {
     //metodo asincrono, recibe el tipo de llamada, caracter que debe buscar
@@ -9,49 +9,63 @@ const CallApiRest = {
         {
             let url = UrlReceive;
             //la primera vez UrlNextPage es la url por defecto
-            let UrlNextPage = url;
-            let IntCount = 0;
-            while(true)
+            var CantLugares = 0;
+            var Charpromise = [];
+          
+            //llamada de tipo await para esperar la respuesta de la api
+            var json = await fnc.CallApiRequest(url,res);
+            if(res.statusCode = 200)
             {
-                //llamada de tipo await para esperar la respuesta de la api
-                var json = await fnc.CallApiRequest(UrlNextPage,res);
-                if(res.statusCode = 200)
-                {
 
-                }
-                //capturo la información que necesito del json response
-                if(Object.keys(json)[0]==='id') 
-                {
-                    UrlNextPage = null;
-                    IntCount = await fnc.ContarCaracteres(json['name'],CharSearch,res)
-                }
-                else
-                {
-                    var JsonInfo = json['info'];
-                    UrlNextPage = JsonInfo['next'];
-                    let UrlPrevPage = JsonInfo['prev'];
-                    var JsonResults= json['results'];
-                    //recorro el json results donde esta el array con la respuesta
-                    for(let IndexB in JsonResults)
-                    {
-                        //capturo el valor de name 
-                        var StrValor = JsonResults[IndexB]['name'];
-                        IntCount += await fnc.ContarCaracteres(StrValor,CharSearch,res)
-                    }
-                }
-                
-                if(UrlNextPage === null)
-                {
-                    //cuando no quedas paginas para consultar, salimos del while
-                    break;
-                }
             }
+            
+            var JsonInfo = json['info'];
+            UrlNextPage = JsonInfo['next'];
+            let UrlPrevPage = JsonInfo['prev'];
+            var JsonResults= json['results'];
+            //recorro el json results donde esta el array con la respuesta
+            for(let IndexB in JsonResults)
+            {
+                //capturo el valor de name 
+                var StrValor = JsonResults[IndexB]['name'];
+                Charpromise.push(new Promise((resolve, reject) => {
+                    resolve(fnc.ContarCaracteres(StrValor,CharSearch,res));
+                }));
+            }
+            
+            await Promise.all(Charpromise).then(values2 => 
+            {
+                
+                var ArrLugares = values2;
+                let total = ArrLugares.reduce((a, b) => a + b, 0);
+                CantLugares = total;
+            });
+
             //retorno la cantidad
-            return "La letra " + CharSearch + " esta " + IntCount + " en las " + Tipo + ". </br>";
+            return CharSearch +";" + CantLugares +";" + Tipo;
         } catch (error) {
             throw(error);
         }
-    }, 
+    },
+    async CantPaginas(UrlReceive,res) {
+        try
+        {
+            let CantPaginas = 0;
+            //llamada de tipo await para esperar la respuesta de la api
+            var json = await fnc.CallApiRequest(UrlReceive,res);
+            if(res.statusCode = 200)
+            {
+
+            }
+            
+            CantPaginas = json['info']['pages'];
+
+            //retorno la cantidad
+            return CantPaginas;
+        } catch (error) {
+            throw(error);
+        }
+    },
     async CantEpisode(UrlReceive,res) {
         try
         {
