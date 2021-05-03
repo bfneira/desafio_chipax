@@ -1,6 +1,6 @@
 # Rick and Morty Challenge
 
-Aplicación desarrollada en `nodejs` que consta de 2 desafios.
+Aplicación desarrollada en `nodejs` que consta de 2 desafíos.
 
 ## Usa la API de Rick and Morty para probar tus habilidades 🥼
 
@@ -49,8 +49,8 @@ Para entrar al segundo desafío se debe llamar la ejecución del segu
 
 1. Inicio: archivo `index.js` ubicado en la raíz.
 2. Routes: carpeta para definir las rutas de la aplicación, la raíz es `./routes/`
-    - `routesone.js`: ruta para el desafio 1.
-    - `routestwo.js`: ruta para el desafio 2.
+    - `routesone.js`: ruta para el desafío 1.
+    - `routestwo.js`: ruta para el desafío 2.
 3. controller: carpeta para definir los controladores, la raíz es `./controller/`
     - `callrequest.js`: controlador con 2 métodos:
         - `getdesafio1`: para llamar al desafío 1.
