@@ -17,19 +17,21 @@ Tienes que consultar todos los `character`, `locations` y `episodes` de [https:/
 
 ## Antes de comenzar
 
-Lo primero es descargar 
+Lo primero es descargar e instalar:
 
-* Instalar [Visual Studio Code](https://code.visualstudio.com/)
-* Instalar [nodejs](https://nodejs.org/es/download/)
+* [Visual Studio Code](https://code.visualstudio.com/)
+* [nodejs](https://nodejs.org/es/download/)
 
 Paquetes que se deben instalar en el proyecto: 
+
 * express `npm install express`.
 * request `npm install request`.
+* jest `npm install jest`.
 
 
-## Desafio 1 : Char counter
+## Desafío 1 : Char counter
 
-Una vez ejecutada la aplicación entrar al localhost con el puerto por defecto configurado `8080` y llamar la ejecución del primer desafio con el enlace [http://localhost:8080/primerdesafio](http://localhost:8080/primerdesafio/)
+Una vez ejecutada la aplicación, desde el navegador debes ingresar al localhost con el puerto por defecto configurado `8080` y llamar la ejecución del primer desafío con el enlace [http://localhost:8080/primerdesafio](http://localhost:8080/primerdesafio/)
 
 <div style="text-align: center;" >
 <img src="img/desafio1.png" width=600 />
@@ -37,7 +39,7 @@ Una vez ejecutada la aplicación entrar al localhost con el puerto por defecto c
 
 ## Desafio 2: Episode locations
 
-Una vez ejecutada la aplicación entrar al localhost con el puerto por defecto configurado `8080` y llamar la ejecución del segundo desafio con el enlace [http://localhost:8080/segundodesafio](http://localhost:8080/segundodesafio/)
+Para entrar al segundo desafío se debe llamar la ejecución del segundo desafío con el enlace [http://localhost:8080/segundodesafio](http://localhost:8080/segundodesafio/)
 
 <div style="text-align: center;" >
 <img src="img/desafio2.png" width=600 />
@@ -45,12 +47,14 @@ Una vez ejecutada la aplicación entrar al localhost con el puerto por defecto c
 
 ## Estructura de la aplicación
 
-1. inicio: Archivo `index.js` ubicado en la raiz.
-2. routes: carpeta para definir las rutas de la aplicación, la raiz es `./routes/`
+1. Inicio: archivo `index.js` ubicado en la raíz.
+2. Routes: carpeta para definir las rutas de la aplicación, la raíz es `./routes/`
     - `routesone.js`: ruta para el desafio 1.
     - `routestwo.js`: ruta para el desafio 2.
-3. controller: Carpeta para definir los controladores, la raiz es `./controller/`
-    - `callrequest.js`: controlador con 2 metodos get para llamar el desafio 1 y getdesafio2 para invocar al segundo desafio.
+3. controller: Carpeta para definir los controladores, la raíz es `./controller/`
+    - `callrequest.js`: controlador con 2 metodos:
+            * `getdesafio1`: para llamar al desafio 1
+            * `getdesafio1`: para invocar al segundo desafio.
     - `controllerdesafio.js`: controlador para invocar a los controllers antes definidos en loop segun la petición.
-4. funciones: carpeta para definir las funciones de la aplicación, la raiz es `./function/`
-5. configuración: carpeta para definir las configuraciones, la raiz es `./config/`, aqui defino el puerto a utilizar y las urls de los apirest que se van a consumir.
+4. funciones: carpeta para definir las funciones de la aplicación, la raíz es `./function/`
+5. configuración: carpeta para definir las configuraciones, la raíz es `./config/`, aqui defino el puerto a utilizar y las urls de las apirest que se van a consumir.
