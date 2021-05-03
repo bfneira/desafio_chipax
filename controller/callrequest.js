@@ -1,24 +1,23 @@
 const fnc = require('../function/function');
 const config = require('../config/config.js');
-const controller_callrequest = require("./ControllerOther");
+const controller_other = require("./ControllerOther");
 
 const CallApiRest = {
     //metodo asincrono, recibe el tipo de llamada, caracter que debe buscar
     async getdesafio1(UrlReceive,CharSearch,Tipo,res) {
         try
         {
-            let url = UrlReceive;
-            //la primera vez UrlNextPage es la url por defecto
+            //Seteo variables
             var CantLugares = 0;
-            var Charpromise = [];
+            var ArrPomise = [];
           
             //llamada de tipo await para esperar la respuesta de la api
-            var json = await fnc.CallApiRequest(url,res);
-            if(res.statusCode = 200)
+            var json = await fnc.CallApiRequest(UrlReceive,res);
+            if(res.statusCode != 200)
             {
-
+                throw new Error('¡Ups! respuesta diferente a 200');
             }
-            
+            //Captura respuesta
             var JsonInfo = json['info'];
             UrlNextPage = JsonInfo['next'];
             let UrlPrevPage = JsonInfo['prev'];
@@ -28,21 +27,79 @@ const CallApiRest = {
             {
                 //capturo el valor de name 
                 var StrValor = JsonResults[IndexB]['name'];
-                Charpromise.push(new Promise((resolve, reject) => {
+                //Arreglo de promesas para contar los caracteres encontrados por tipo
+                ArrPomise.push(new Promise((resolve, reject) => {
                     resolve(fnc.ContarCaracteres(StrValor,CharSearch,res));
                 }));
             }
             
-            await Promise.all(Charpromise).then(values2 => 
+            await Promise.all(ArrPomise).then(values => 
             {
-                
-                var ArrLugares = values2;
-                let total = ArrLugares.reduce((a, b) => a + b, 0);
-                CantLugares = total;
+                var ArrLugares = values;
+                //Suma cantidad de origenes
+                CantLugares = ArrLugares.reduce((a, b) => a + b, 0);
             });
 
-            //retorno la cantidad
+            //retorno arreglo con la cantidad por tipo de llamada
             return CharSearch +";" + CantLugares +";" + Tipo;
+        } catch (error) {
+            throw(error);
+        }
+    },
+    async getdesafio2(UrlRequest,NumEpisode,res) {
+        try
+        {
+            let StrResponseReq = "";
+            var ArrPromise = [];
+            
+            //llamada de tipo await para esperar la respuesta de la api
+            let json = await fnc.CallApiRequest(UrlRequest,res);
+            
+            //capturo la información que necesito del json response
+            let StrNameEpisode = json['name'];
+            let JsonCharacters= json['characters'];
+            //Recorro la variable JsonCharacters
+            for(let IndexC in JsonCharacters)
+            {
+                let UrlCharacters = JsonCharacters[IndexC];
+                //promesa para buscar las localizaciones de los personajes
+                ArrPromise.push(new Promise((resolve, reject) => {
+                    resolve(controller_other.getPersonajes(UrlCharacters,res));
+                }));
+            }
+
+            var StrRespuesta = "";
+            await Promise.all(ArrPromise).then(values => 
+            {
+                //Arreglo con la respuesta de las localizaciones
+                var ArrLugares = [];
+                ArrLugares = (values.toString()).split(",");
+                //Seteo de variables
+                StrAllLocationsIde = "";
+                let IntCountLocation = 0;
+                let StrLocations = "{";
+                var n = 0;
+                //Recorro la respuesta
+                for (let i = 0; i < ArrLugares.length; i++) 
+                {
+                    //Solo concateno y cuento si es diferente
+                    n = StrAllLocationsIde.indexOf("," +  ArrLugares[i] + ",",0);
+                    if(n<0)
+                    {
+                        StrLocations = StrLocations + ArrLugares[i] + ",";
+                        IntCountLocation = IntCountLocation + 1;
+                        StrAllLocationsIde = StrAllLocationsIde + "," + ArrLugares[i] + ","
+                    }
+                }
+                //Creo respuesta
+                StrLocations = StrLocations  + "}";
+                StrResponseReq =  StrResponseReq + "Episodio n " + NumEpisode + ": " + StrNameEpisode;
+                StrResponseReq =  StrResponseReq + ", cantidad de location: " + IntCountLocation;
+                StrResponseReq =  StrResponseReq + " </br>" + StrLocations + " </br>";
+                StrRespuesta =StrResponseReq;
+            });
+            //Retorno respuesta
+            return StrRespuesta;
         } catch (error) {
             throw(error);
         }
@@ -53,14 +110,15 @@ const CallApiRest = {
             let CantPaginas = 0;
             //llamada de tipo await para esperar la respuesta de la api
             var json = await fnc.CallApiRequest(UrlReceive,res);
-            if(res.statusCode = 200)
-            {
 
+            if(res.statusCode != 200)
+            {
+                throw new Error('¡Ups! respuesta diferente a 200');
             }
             
+            //Cantidad de paginas
             CantPaginas = json['info']['pages'];
-
-            //retorno la cantidad
+            //Retorno la cantidad
             return CantPaginas;
         } catch (error) {
             throw(error);
@@ -69,17 +127,17 @@ const CallApiRest = {
     async CantEpisode(UrlReceive,res) {
         try
         {
-            let url = UrlReceive;
             //la primera vez UrlNextPage es la url por defecto
-            let UrlNextPage = url;
+            let UrlNextPage = UrlReceive;
             let ArrEpisode = [];
             while(true)
             {
                 //llamada de tipo await para esperar la respuesta de la api
                 var json = await fnc.CallApiRequest(UrlNextPage,res);
-                if(res.statusCode = 200)
-                {
 
+                if(res.statusCode != 200)
+                {
+                    throw new Error('¡Ups! respuesta diferente a 200');
                 }
                
                 var JsonInfo = json['info'];
@@ -106,57 +164,7 @@ const CallApiRest = {
             throw(error);
         }
     },
-    async getdesafio2(UrlRequest,NumEpisode,res) {
-      
-            let StrResponseReq = "";
-            //la primera vez UrlNextPage es la url por defecto
-            
-            //llamada de tipo await para esperar la respuesta de la api
-            let json = await fnc.CallApiRequest(UrlRequest,res);
-            
-            //capturo la información que necesito del json response
-            let StrNameEpisode = json['name'];
-            let JsonCharacters= json['characters'];
-
-            var Charpromise = [];
-            for(let IndexC in JsonCharacters)
-            {
-                let UrlCharacters = JsonCharacters[IndexC];
-                Charpromise.push(new Promise((resolve, reject) => {
-                    resolve(controller_callrequest.getPersonajes(UrlCharacters,NumEpisode,StrNameEpisode,res));
-                }));
-            }
-
-            var aaa = "";
-            await Promise.all(Charpromise).then(values2 => 
-            {
-                var Lugares = [];
-                Lugares = (values2.toString()).split(",");
-                StrAllLocationsIde = "";
-                let IntCountLocation = 0;
-                let StrLocations = "{";
-                var n = 0;
-                for (var i = 0; i < Lugares.length; i++) 
-                {
-                    n = StrAllLocationsIde.indexOf("," +  Lugares[i] + ",",0);
-                    if(n<0)
-                    {
-                        StrLocations = StrLocations + Lugares[i] + ",";
-                        IntCountLocation = IntCountLocation + 1;
-                        StrAllLocationsIde = StrAllLocationsIde + "," + Lugares[i] + ","
-                    }
-                }
-                StrLocations = StrLocations  + "}";
-                StrResponseReq =  StrResponseReq + "Episodio n " + NumEpisode + ": " + StrNameEpisode;
-                StrResponseReq =  StrResponseReq + ", cantidad de location: " + IntCountLocation;
-                StrResponseReq =  StrResponseReq + " </br>" + StrLocations + " </br>";
-                aaa =StrResponseReq;
-            });
-            return aaa;
-       
-    },
 };
-
 
 //exporto el controlador
 module.exports = CallApiRest;

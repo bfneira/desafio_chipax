@@ -22,36 +22,25 @@ const FncFunction = {
         }
     },
     async ContarCaracteres(Valor, CharSearch, res) {
-        var IntCount = 0;
-        //todos los caracteres en mayuscula
-        var StrValor = Valor.toUpperCase();
-        //elimino espacios
-        StrValor = StrValor.replace(/ /gi, "");
-        for (var i = 0; i< StrValor.length; i++) {
-            //recorro los caracteres
-            var StrChar = StrValor.charAt(i);
-            //busco la letra buscada
-            if( StrChar == CharSearch) {
-                IntCount ++; //aumento contador
-            }  
-        } 
-        return IntCount;
-    },
-    async CalcularTiempo(DtaInicio,DtaFin){
-        var timeDiff = Math.round((DtaFin-DtaInicio)/ 1000);
-        var result = 0;
-        if(timeDiff<60)
+        try
         {
-            result = timeDiff + " segundos";
+            var IntCount = 0;
+            //todos los caracteres en mayuscula
+            var StrValor = Valor.toUpperCase();
+            //elimino espacios
+            StrValor = StrValor.replace(/ /gi, "");
+            for (var i = 0; i< StrValor.length; i++) {
+                //recorro los caracteres
+                var StrChar = StrValor.charAt(i);
+                //busco la letra buscada
+                if( StrChar == CharSearch) {
+                    IntCount ++; //aumento contador
+                }  
+            } 
+            return IntCount;
+        } catch (error) {
+            throw(error);
         }
-        else
-        {
-            var seconds = Math.round(timeDiff % 60);
-            timeDiff = Math.floor(timeDiff / 60);
-            var minutes = Math.round(timeDiff % 60);
-            result = minutes + " minutos " + seconds + " segundos";
-        }
-        return result;
     },
 };
 

@@ -4,66 +4,71 @@ const controller_callrequest = require("../controller/callrequest");
 
 const GetAllController = {
     async getdesafio1(req,res) {
-        //hora inicio 
         try
         {
+            //Tiempo inicio proceso
+            var DtaInicio = new Date().getTime();
+            //Cantidad de paginas por tipo de llamada localización | Episodios | Personajes
             var CantPaginasLoca = await controller_callrequest.CantPaginas(config.ApiUrlLocation,res);
             var CantPaginasEpi = await controller_callrequest.CantPaginas(config.ApiUrlEpisode,res);
             var CantPaginasCara = await controller_callrequest.CantPaginas(config.ApiUrlCharacter,res);
-
-            var DtaInicio = new Date().getTime();
+            //Tipos de llamadas y filtros de busqueda
             let TypeCall = ['Location','Episode','Character'];
             let charSearch = ['I','E','C'];
+            //Arreglo con las promesas
+            var ArrPromise = [];
 
-            var promise = [];
-
-            for (var i = 0; i < TypeCall.length; i++) 
+            for (let i = 0; i < TypeCall.length; i++) 
             {
                 let url = "";
-            //case para determinar la url del request
+                //Case para determinar la url del request y agregar la promesa por tipo
                 switch (TypeCall[i]) {
                     case "Location": 
-                        for (var b = 0; b < CantPaginasLoca; b++) 
+                        for (let b = 0; b < CantPaginasLoca; b++) 
                         {
                             url = config.ApiUrlLocation + "/?page=" + (b+1);
-                            promise.push(new Promise((resolve, reject) => {
+                            ArrPromise.push(new Promise((resolve, reject) => {
                                 resolve(controller_callrequest.getdesafio1(url,charSearch[i],TypeCall[i],res));
                             }));
                         }
                         break;
                     case "Episode": 
-                        for (var b = 0; b < CantPaginasEpi; b++) 
+                        for (let b = 0; b < CantPaginasEpi; b++) 
                         {
                             url = config.ApiUrlEpisode + "/?page=" +(b+1);
-                            promise.push(new Promise((resolve, reject) => {
+                            ArrPromise.push(new Promise((resolve, reject) => {
                                 resolve(controller_callrequest.getdesafio1(url,charSearch[i],TypeCall[i],res));
                             }));
                         }
                         break;
                     case "Character": 
-                        for (var b = 0; b < CantPaginasCara; b++) 
+                        for (let b = 0; b < CantPaginasCara; b++) 
                         {
                             url = config.ApiUrlCharacter + "/?page=" +(b+1);
-                            promise.push(new Promise((resolve, reject) => {
+                            ArrPromise.push(new Promise((resolve, reject) => {
                                 resolve(controller_callrequest.getdesafio1(url,charSearch[i],TypeCall[i],res));
                             }));
                         }
                         break;
                 }
-
-                
             }
 
-            Promise.all(promise).then(values => {
-                var respuesta = "";
+            Promise.all(ArrPromise).then(values => 
+            {
+                //Seteo de variables
+                var Respuesta = "";
                 var CantLoca = 0;
                 var CantEpi = 0;
                 var CantChara = 0;
+                //Arreglo de la respuesta de la promesa
                 var ArrRespuestas = (values.toString()).split(","); 
                 for (var i = 0; i < ArrRespuestas.length -1; i++) 
                 {
+                    //Arreglo con el detalle de la respuesta
                     var ArrDetalle = ((ArrRespuestas[i]).toString()).split(";"); 
-                    switch (ArrDetalle[2]){
+                    //Sumatoria por tipo de respuesta
+                    switch (ArrDetalle[2])
+                    {
                         case "Location":
                             CantLoca = CantLoca + Number(ArrDetalle[1]);
                             break;
@@ -73,72 +78,85 @@ const GetAllController = {
                         case "Character":
                             CantChara = CantChara + Number(ArrDetalle[1]);
                             break;
-                        
                     }
                 }
+                //Generación de la respuesta por tipo
+                Respuesta = "La letra I esta " + CantLoca + " en las Location. <br> ";
+                Respuesta = Respuesta + "La letra E esta " + CantEpi + " en las Episode. <br> ";
+                Respuesta = Respuesta + "La letra C esta " + CantChara + " en las Character. <br> ";
                 
-                respuesta = "La letra I esta " + CantLoca + " en las Location. <br> ";
-                respuesta = respuesta + "La letra E esta " + CantEpi + " en las Episode. <br> ";
-                respuesta = respuesta + "La letra C esta " + CantChara + " en las Character. <br> ";
-
+                //Captura tiempo fin proceso
                 var DtaFin= new Date().getTime();
+                //Diferencia en milesegundos
                 var timeDiff = Math.round((DtaFin-DtaInicio)/ 1000);
-            
-                var calculo  = "";
+                var StrCalculo  = "";
                 if(timeDiff<60)
                 {
-                    calculo = timeDiff + " segundos";
+                    //Respuesta en segundos 
+                    StrCalculo = timeDiff + " segundos";
                 }
                 else
                 {
+                    //Respuesta en minutos y segundos
                     var seconds = Math.round(timeDiff % 60);
                     timeDiff = Math.floor(timeDiff / 60);
                     var minutes = Math.round(timeDiff % 60);
-                    calculo = minutes + " minutos " + seconds + " segundos";
+                    StrCalculo = minutes + " minutos " + seconds + " segundos";
                 }
-                
-                res.send("Tiempo de ejecución: " + calculo + " <br><br> Respuesta: <br> " +  respuesta);
+                //Generación de la respuesta, calculo tiempo ejecución + respuesta desafio
+                res.send("Tiempo de ejecución: " + StrCalculo + " <br><br> Respuesta: <br> " +  Respuesta);
             });
         } catch (error) {
             res.send(error);
         }
     },
     async getdesafio2(req,res) {
-        
+        try
+        {
+            //Tiempo inicio del proceso
+            var DtaInicio = new Date().getTime();
+            //Cantidad de episodios totales
+            var ArrEpisode = await controller_callrequest.CantEpisode(config.ApiUrlEpisode,res);
+            //Arreglo para las nuevas promesas
+            var ArrPromise = [];
+            //Ciclo por cantidad de episodios para crear las promesas
+            for (let i = 0; i < ArrEpisode.length -1; i++) {
+                ArrPromise.push(new Promise((resolve, reject) => {
+                    //Url episodio + numero de episodio
+                    var url = config.ApiUrlEpisode + "/" + ArrEpisode[i];
+                    resolve(controller_callrequest.getdesafio2(url,i +1,res));
+                }));
+            }
 
-        var ArrEpisode = await controller_callrequest.CantEpisode(config.ApiUrlEpisode,res);
-        var DtaInicio = new Date().getTime();
-        var promise = [];
-
-       for (var i = 0; i < ArrEpisode.length -1; i++) {
-            promise.push(new Promise((resolve, reject) => {
-                var url = config.ApiUrlEpisode;
-                url = "https://rickandmortyapi.com/api/episode/" + ArrEpisode[i];
-                resolve(controller_callrequest.getdesafio2(url,i +1,res));
-            }));
+            var StrRespuesta ="";
+            Promise.all(ArrPromise).then(values => 
+            {
+                //Tiempo fin proceso
+                var DtaFin= new Date().getTime();
+                //Diferencia en milesegundos
+                var timeDiff = Math.round((DtaFin-DtaInicio)/ 1000);
+                var StrCalculo  = "";
+                if(timeDiff<60)
+                {
+                    //Respuesta en segundos 
+                    StrCalculo = timeDiff + " segundos";
+                }
+                else
+                {
+                    //Respuesta en minutos y segundos
+                    var seconds = Math.round(timeDiff % 60);
+                    timeDiff = Math.floor(timeDiff / 60);
+                    var minutes = Math.round(timeDiff % 60);
+                    StrCalculo = minutes + " minutos " + seconds + " segundos";
+                }
+                //Respuesta promesa
+                StrRespuesta = values.toString(); 
+                //Generación de la respuesta, calculo tiempo ejecución + respuesta desafio
+                res.send("Tiempo de ejecución: " + StrCalculo + " <br><br> Respuesta: <br> " +  StrRespuesta);
+            });
+        } catch (error) {
+            res.send(error);
         }
-
-        var respuesta ="";
-        Promise.all(promise).then(values => {
-            var DtaFin= new Date().getTime();
-            var timeDiff = Math.round((DtaFin-DtaInicio)/ 1000);
-        
-            var calculo  = "";
-            if(timeDiff<60)
-            {
-                calculo = timeDiff + " segundos";
-            }
-            else
-            {
-                var seconds = Math.round(timeDiff % 60);
-                timeDiff = Math.floor(timeDiff / 60);
-                var minutes = Math.round(timeDiff % 60);
-                calculo = minutes + " minutos " + seconds + " segundos";
-            }
-
-            respuesta = values.toString(); 
-            res.send("Tiempo de ejecución: " + calculo + " <br><br> Respuesta: <br> " +  respuesta);
-        });
     },
 };
 
