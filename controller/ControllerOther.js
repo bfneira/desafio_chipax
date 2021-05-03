@@ -1,7 +1,7 @@
 const fnc = require('../function/function');
 
 const CallPersonajes = {
-    async getPersonajes(UrlRequest,res) {
+    async getLocation(UrlRequest,res) {
         try
         {
             //llamada de tipo await para esperar la respuesta de la api

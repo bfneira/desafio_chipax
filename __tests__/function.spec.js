@@ -1,8 +1,10 @@
 const fnc = require('../function/function');
 const { mockRequest, mockResponse } = require('../util/interceptor')
-const controller_callrequest = require("../controller/callrequest");
+const controller_callrequest = require("../controller/CallRequest");
+const controller_other = require("../controller/ControllerOther");
+const controller_desafio = require("../controller/ControllerDesafio");
 
-  test('GET / llama un episodio y espera una respuesta ok = 200', async (done) => {
+  test('GET / llama un episodio y espera una respuesta ok = 200.', async (done) => {
     let req = mockRequest();
     req.params.id = null;
     req = "https://rickandmortyapi.com/api/episode/27";
@@ -13,17 +15,42 @@ const controller_callrequest = require("../controller/callrequest");
     done();
   });
 
-  test('GET / validar si retorna un entero', async (done) => {
-    let req = mockRequest();
-    req.params.id = null;
-    req = "https://rickandmortyapi.com/api/episode/27"
+  test('GET / función para buscar cantidad de veces un caracter.', async (done) => {
     const res = mockResponse();
 
-    intCount = await controller_callrequest.getdesafio1(req,"E",res);
+    var intCount =  await fnc.ContarCaracteres("VALOR","L", res);;
 
     expect(intCount).toBe(1);
     done();
   });
 
+  test('GET / Busca el lugar de origen de un personaje.', async (done) => {
+    const res = mockResponse();
+
+    var StrResponse =  await controller_other.getLocation("https://rickandmortyapi.com/api/character/2", res);;
+
+    expect(StrResponse).toBe("Earth (C-137)");
+    done();
+  });
+
+  test('GET / Valida que este operando el desafio 1.', async (done) => {
+    let req = mockRequest();
+    req.params.id = null;
+    const res = mockResponse();
+
+    await controller_desafio.getdesafio1(req, res);;
+    expect(res.status).toHaveBeenCalledWith(200);
+    done();
+  });
+
+  test('GET / Valida que este operando el desafio 2.', async (done) => {
+    let req = mockRequest();
+    req.params.id = null;
+    const res = mockResponse();
+
+    await controller_desafio.getdesafio2(req, res);;
+    expect(res.status).toHaveBeenCalledWith(200);
+    done();
+  });
 
 

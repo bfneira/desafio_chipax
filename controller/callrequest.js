@@ -64,7 +64,7 @@ const CallApiRest = {
                 let UrlCharacters = JsonCharacters[IndexC];
                 //promesa para buscar las localizaciones de los personajes
                 ArrPromise.push(new Promise((resolve, reject) => {
-                    resolve(controller_other.getPersonajes(UrlCharacters,res));
+                    resolve(controller_other.getLocation(UrlCharacters,res));
                 }));
             }
 

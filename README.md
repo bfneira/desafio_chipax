@@ -26,7 +26,7 @@ Paquetes que se deben instalar en el proyecto:
 
 * express `npm install express`.
 * request `npm install request`.
-* jest `npm install jest`.
+* jest `npm install --save-dev jest`.
 
 
 ## Desafío 1 : Char counter
@@ -53,8 +53,19 @@ Para entrar al segundo desafío se debe llamar la ejecución del segu
     - `routestwo.js`: ruta para el desafio 2.
 3. controller: Carpeta para definir los controladores, la raíz es `./controller/`
     - `callrequest.js`: controlador con 2 metodos:
-            a. `getdesafio1`: para llamar al desafio 1.
-            b. `getdesafio1`: para invocar al segundo desafio.
+        - `getdesafio1`: para llamar al desafio 1.
+        - `getdesafio2`: para invocar al segundo desafío.
+        - `CantPaginas`: método para leer cantidad de paginas de la llamada.
+        - `CantEpisode`: método para leer la cantidad total de episodios.
     - `controllerdesafio.js`: controlador para invocar a los controllers antes definidos en loop segun la petición.
 4. funciones: carpeta para definir las funciones de la aplicación, la raíz es `./function/`
 5. configuración: carpeta para definir las configuraciones, la raíz es `./config/`, aqui defino el puerto a utilizar y las urls de las apirest que se van a consumir.
+6. __test__: carpeta con el testing de la aplicación.
+
+## Testing
+
+Para ejecutar las pruebas se debe llamar al comando `npm test`, mediante `jest`.
+
+<div style="text-align: center;" >
+<img src="img/desafio2.png" width=600 />
+</div>

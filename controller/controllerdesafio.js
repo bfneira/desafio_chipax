@@ -1,6 +1,6 @@
 const fnc = require('../function/function');
 const config = require('../config/config.js');
-const controller_callrequest = require("../controller/callrequest");
+const controller_callrequest = require("./CallRequest");
 
 const GetAllController = {
     async getdesafio1(req,res) {
