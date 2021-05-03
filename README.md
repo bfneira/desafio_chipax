@@ -67,5 +67,5 @@ Para entrar al segundo desafío se debe llamar la ejecución del segu
 Para ejecutar las pruebas se debe llamar al comando `npm test`, mediante `jest`.
 
 <div style="text-align: center;" >
-<img src="img/desafio2.png" width=600 />
+<img src="img/test.png" width=600 />
 </div>
