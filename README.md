@@ -51,16 +51,16 @@ Para entrar al segundo desafío se debe llamar la ejecución del segu
 2. Routes: carpeta para definir las rutas de la aplicación, la raíz es `./routes/`
     - `routesone.js`: ruta para el desafio 1.
     - `routestwo.js`: ruta para el desafio 2.
-3. controller: Carpeta para definir los controladores, la raíz es `./controller/`
-    - `callrequest.js`: controlador con 2 metodos:
-        - `getdesafio1`: para llamar al desafio 1.
+3. controller: carpeta para definir los controladores, la raíz es `./controller/`
+    - `callrequest.js`: controlador con 2 métodos:
+        - `getdesafio1`: para llamar al desafío 1.
         - `getdesafio2`: para invocar al segundo desafío.
-        - `CantPaginas`: método para leer cantidad de paginas de la llamada.
+        - `CantPaginas`: método para leer cantidad de páginas de la llamada.
         - `CantEpisode`: método para leer la cantidad total de episodios.
     - `controllerdesafio.js`: controlador para invocar a los controllers antes definidos en loop segun la petición.
 4. funciones: carpeta para definir las funciones de la aplicación, la raíz es `./function/`
-5. configuración: carpeta para definir las configuraciones, la raíz es `./config/`, aqui defino el puerto a utilizar y las urls de las apirest que se van a consumir.
-6. __test__: carpeta con el testing de la aplicación.
+5. configuración: carpeta para definir las configuraciones, la raíz es `./config/`, aquí defino el puerto a utilizar y las urls de las apirest que se van a consumir.
+6. __ test __: carpeta con el testing de la aplicación.
 
 ## Testing
 
