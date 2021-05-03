@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-//referencia controlador
+//Referencia controlador
 const GetAllController = require("../controller/controllerdesafio");
-//llamada y su controlador
+//Llamada y su controlador
 router.get("/", GetAllController.getdesafio2);
 
-//exporto la ruta
+//Exporto la ruta
 module.exports = router;

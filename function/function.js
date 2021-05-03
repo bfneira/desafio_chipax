@@ -1,10 +1,10 @@
 
 const FncFunction = {
-    //metodo asincrono para llamar a la api, recibe por parametro la url
+    //Método asincrono para llamar a la API, recibe por parámetro la url
     async CallApiRequest(url,res) {
         try
         {
-            //defino las opciones de la solicitud GET
+            //Defino las opciones de la solicitud GET
             var Options = 
                 {
                     url: url,
@@ -12,9 +12,9 @@ const FncFunction = {
                     Headers: { 'Accept': 'application/json','Accept-charset': 'utf-8',},
                     pool: {maxSockets: 400}
                 }
-            //llamada de tipo await para esperar respuesta, se enviar la configuración de la llamada
+            //Llamada de tipo sincrono para esperar la respuesta, se envía la configuración de la llamada
             var Response = await call(Options);
-            //retorno la respuesta
+            //Retorno la respuesta
             res.status(200);
             return JSON.parse(Response);
         } catch (error) {
@@ -25,14 +25,14 @@ const FncFunction = {
         try
         {
             var IntCount = 0;
-            //todos los caracteres en mayuscula
+            //Convierte todos los caracteres en mayúscula
             var StrValor = Valor.toUpperCase();
-            //elimino espacios
+            //Elimino los espacios
             StrValor = StrValor.replace(/ /gi, "");
             for (var i = 0; i< StrValor.length; i++) {
-                //recorro los caracteres
+                //Recorro los caracteres
                 var StrChar = StrValor.charAt(i);
-                //busco la letra buscada
+                //Busco la letra buscada
                 if( StrChar == CharSearch) {
                     IntCount ++; //aumento contador
                 }  
@@ -44,13 +44,13 @@ const FncFunction = {
     },
 };
 
-//metodo asincrono
+//Método asincrono
 async function call(Options) 
 {
     try
     {
         let Response = await doRequest(Options);
-        //retorno respuesta
+        //Retorno respuesta
         return(Response);
     } catch (error) {
         throw(error);
@@ -61,20 +61,20 @@ function doRequest(url)
 {
     try
     {
-        //promesa
+        //Promesa
         return new Promise(function (resolve, reject) 
             {
                 const request = require("request");
                 //llamada request
                 request(url, function (error, res, body) 
                 {
-                    //sin errores y una respuesta con codigo 200
+                    //Sin errores y una respuesta con código 200
                     if (!error && res.statusCode == 200) 
                     {
-                        //retorno respuesta
+                        //Retorno la respuesta
                         resolve(body);
                     } else {
-                        //retorno error
+                        //Retorno el error
                         reject(error);
                     }
                 });
@@ -84,5 +84,5 @@ function doRequest(url)
     }
 }
 
-//exporto función
+//Exporto la función
 module.exports = FncFunction;

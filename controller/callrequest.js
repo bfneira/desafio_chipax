@@ -3,7 +3,7 @@ const config = require('../config/config.js');
 const controller_other = require("./ControllerOther");
 
 const CallApiRest = {
-    //metodo asincrono, recibe el tipo de llamada, caracter que debe buscar
+    //Método asincrono, recibe el tipo de llamada, caracter que debe buscar
     async getdesafio1(UrlReceive,CharSearch,Tipo,res) {
         try
         {
@@ -11,7 +11,7 @@ const CallApiRest = {
             var CantLugares = 0;
             var ArrPomise = [];
           
-            //llamada de tipo await para esperar la respuesta de la api
+            //Llamada de tipo sincrono para esperar la respuesta de la API
             var json = await fnc.CallApiRequest(UrlReceive,res);
             if(res.statusCode != 200)
             {
@@ -22,10 +22,10 @@ const CallApiRest = {
             UrlNextPage = JsonInfo['next'];
             let UrlPrevPage = JsonInfo['prev'];
             var JsonResults= json['results'];
-            //recorro el json results donde esta el array con la respuesta
+            //Recorro el json results, donde está el array con la respuesta
             for(let IndexB in JsonResults)
             {
-                //capturo el valor de name 
+                //Capturo el valor del parametro name 
                 var StrValor = JsonResults[IndexB]['name'];
                 //Arreglo de promesas para contar los caracteres encontrados por tipo
                 ArrPomise.push(new Promise((resolve, reject) => {
@@ -36,11 +36,11 @@ const CallApiRest = {
             await Promise.all(ArrPomise).then(values => 
             {
                 var ArrLugares = values;
-                //Suma cantidad de origenes
+                //Suma la cantidad de los orígenes del array
                 CantLugares = ArrLugares.reduce((a, b) => a + b, 0);
             });
 
-            //retorno arreglo con la cantidad por tipo de llamada
+            //Retorno arreglo con la cantidad según por tipo de llamada
             return CharSearch +";" + CantLugares +";" + Tipo;
         } catch (error) {
             throw(error);
@@ -52,17 +52,17 @@ const CallApiRest = {
             let StrResponseReq = "";
             var ArrPromise = [];
             
-            //llamada de tipo await para esperar la respuesta de la api
+            //Llamada de tipo sincrono, para esperar la respuesta de la API
             let json = await fnc.CallApiRequest(UrlRequest,res);
             
-            //capturo la información que necesito del json response
+            //Capturo la información del json
             let StrNameEpisode = json['name'];
             let JsonCharacters= json['characters'];
-            //Recorro la variable JsonCharacters
+            //Recorro la variable JsonCharacters, que contiene un array con la respuesta
             for(let IndexC in JsonCharacters)
             {
                 let UrlCharacters = JsonCharacters[IndexC];
-                //promesa para buscar las localizaciones de los personajes
+                //Promesa para buscar las localizaciones de los personajes
                 ArrPromise.push(new Promise((resolve, reject) => {
                     resolve(controller_other.getLocation(UrlCharacters,res));
                 }));
@@ -108,7 +108,7 @@ const CallApiRest = {
         try
         {
             let CantPaginas = 0;
-            //llamada de tipo await para esperar la respuesta de la api
+            //Llamada de tipo sincrono para esperar la respuesta de la API
             var json = await fnc.CallApiRequest(UrlReceive,res);
 
             if(res.statusCode != 200)
@@ -116,9 +116,9 @@ const CallApiRest = {
                 throw new Error('¡Ups! respuesta diferente a 200');
             }
             
-            //Cantidad de paginas
+            //Cantidad de páginas
             CantPaginas = json['info']['pages'];
-            //Retorno la cantidad
+            //Retorno la cantidad de páginas
             return CantPaginas;
         } catch (error) {
             throw(error);
@@ -127,12 +127,12 @@ const CallApiRest = {
     async CantEpisode(UrlReceive,res) {
         try
         {
-            //la primera vez UrlNextPage es la url por defecto
+            //La primera vez la variable UrlNextPage es el valor de UrlReceive
             let UrlNextPage = UrlReceive;
             let ArrEpisode = [];
             while(true)
             {
-                //llamada de tipo await para esperar la respuesta de la api
+                //Llamada de tipo sincrono para esperar la respuesta de la API
                 var json = await fnc.CallApiRequest(UrlNextPage,res);
 
                 if(res.statusCode != 200)
@@ -144,21 +144,21 @@ const CallApiRest = {
                 UrlNextPage = JsonInfo['next'];
                 let UrlPrevPage = JsonInfo['prev'];
                 var JsonResults= json['results'];
-                //recorro el json results donde esta el array con la respuesta
+                //Recorro el json results donde esta el array con la respuesta
                 for(let IndexB in JsonResults)
                 {
-                    //capturo el valor de name 
+                    //Capturo el valor de parametro name 
                     var StrValor = JsonResults[IndexB]['id'];
                     ArrEpisode.push(StrValor);
                 }
                 
                 if(UrlNextPage === null)
                 {
-                    //cuando no quedas paginas para consultar, salimos del while
+                    //Cuando no quedan páginas, sale del ciclo
                     break;
                 }
             }
-            //retorno la cantidad
+            //Retorno la cantidad de episodios
             return ArrEpisode;
         } catch (error) {
             throw(error);
@@ -166,5 +166,5 @@ const CallApiRest = {
     },
 };
 
-//exporto el controlador
+//Exporto el controlador
 module.exports = CallApiRest;

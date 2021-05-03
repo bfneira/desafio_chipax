@@ -1,24 +1,20 @@
-//librerias
+//Referencias a librerías
 const express = require('express');
 const app = express();
 
-//configuraciones
+//Configuraciones
 const config = require('./config/config.js');
 
-//agrego las rutas
+//Agrego las rutas
 const routesone = require('./routes/routesone');
 const routestwo = require('./routes/routestwo');
 
-//llamada primer desafio
+//Llamada al primer desafío
 app.use('/primerdesafio', routesone);
+//Llamada al segundo desafío
 app.use('/segundodesafio', routestwo);
 
-//test que enviar mensaje hola mundo
-app.get("/",function(req,res){
-  res.send('Hola mundo');
-})
-
-//Para depurar la aplicación en un puerto en espesifico
+//Para depurar la aplicación en un puerto en específico
 app.listen(config.port, function () {
     console.log('app listening at port %s', config.port);
 });

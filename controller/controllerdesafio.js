@@ -6,13 +6,13 @@ const GetAllController = {
     async getdesafio1(req,res) {
         try
         {
-            //Tiempo inicio proceso
+            //Variable con el tiempo inicio del proceso
             var DtaInicio = new Date().getTime();
-            //Cantidad de paginas por tipo de llamada localización | Episodios | Personajes
+            //Cantidad de páginas por tipo de llamada: Localización , Episodios , Personajes
             var CantPaginasLoca = await controller_callrequest.CantPaginas(config.ApiUrlLocation,res);
             var CantPaginasEpi = await controller_callrequest.CantPaginas(config.ApiUrlEpisode,res);
             var CantPaginasCara = await controller_callrequest.CantPaginas(config.ApiUrlCharacter,res);
-            //Tipos de llamadas y filtros de busqueda
+            //Tipos de llamadas y filtros de búsqueda
             let TypeCall = ['Location','Episode','Character'];
             let charSearch = ['I','E','C'];
             //Arreglo con las promesas
@@ -21,7 +21,7 @@ const GetAllController = {
             for (let i = 0; i < TypeCall.length; i++) 
             {
                 let url = "";
-                //Case para determinar la url del request y agregar la promesa por tipo
+                //Case para determinar la url del request y agregar la promesa por tipo de llamada
                 switch (TypeCall[i]) {
                     case "Location": 
                         for (let b = 0; b < CantPaginasLoca; b++) 
@@ -60,11 +60,11 @@ const GetAllController = {
                 var CantLoca = 0;
                 var CantEpi = 0;
                 var CantChara = 0;
-                //Arreglo de la respuesta de la promesa
+                //Arreglo de la respuesta la promesa
                 var ArrRespuestas = (values.toString()).split(","); 
                 for (var i = 0; i < ArrRespuestas.length -1; i++) 
                 {
-                    //Arreglo con el detalle de la respuesta
+                    //Arreglo con el detalle de la respuesta'
                     var ArrDetalle = ((ArrRespuestas[i]).toString()).split(";"); 
                     //Sumatoria por tipo de respuesta
                     switch (ArrDetalle[2])
@@ -85,7 +85,7 @@ const GetAllController = {
                 Respuesta = Respuesta + "La letra E esta " + CantEpi + " en las Episode. <br> ";
                 Respuesta = Respuesta + "La letra C esta " + CantChara + " en las Character. <br> ";
                 
-                //Captura tiempo fin proceso
+                //Variable con el tiempo del fin del proceso
                 var DtaFin= new Date().getTime();
                 //Diferencia en milesegundos
                 var timeDiff = Math.round((DtaFin-DtaInicio)/ 1000);
@@ -103,7 +103,7 @@ const GetAllController = {
                     var minutes = Math.round(timeDiff % 60);
                     StrCalculo = minutes + " minutos " + seconds + " segundos";
                 }
-                //Generación de la respuesta, calculo tiempo ejecución + respuesta desafio
+                //Generación de la respuesta, calculo tiempo ejecución + respuesta del desafío
                 res.send("Tiempo de ejecución: " + StrCalculo + " <br><br> Respuesta: <br> " +  Respuesta);
             });
         } catch (error) {
@@ -113,16 +113,16 @@ const GetAllController = {
     async getdesafio2(req,res) {
         try
         {
-            //Tiempo inicio del proceso
+            //Variable con el tiempo inicio del proceso
             var DtaInicio = new Date().getTime();
-            //Cantidad de episodios totales
+            //Cantidad total de episodios
             var ArrEpisode = await controller_callrequest.CantEpisode(config.ApiUrlEpisode,res);
             //Arreglo para las nuevas promesas
             var ArrPromise = [];
             //Ciclo por cantidad de episodios para crear las promesas
             for (let i = 0; i < ArrEpisode.length -1; i++) {
                 ArrPromise.push(new Promise((resolve, reject) => {
-                    //Url episodio + numero de episodio
+                    //Url episodio + número del episodio
                     var url = config.ApiUrlEpisode + "/" + ArrEpisode[i];
                     resolve(controller_callrequest.getdesafio2(url,i +1,res));
                 }));
@@ -131,7 +131,7 @@ const GetAllController = {
             var StrRespuesta ="";
             Promise.all(ArrPromise).then(values => 
             {
-                //Tiempo fin proceso
+                //Variable con el tiempo del fin del proceso
                 var DtaFin= new Date().getTime();
                 //Diferencia en milesegundos
                 var timeDiff = Math.round((DtaFin-DtaInicio)/ 1000);
@@ -151,7 +151,7 @@ const GetAllController = {
                 }
                 //Respuesta promesa
                 StrRespuesta = values.toString(); 
-                //Generación de la respuesta, calculo tiempo ejecución + respuesta desafio
+                //Generación de la respuesta, calculo tiempo ejecución + respuesta del desafío
                 res.send("Tiempo de ejecución: " + StrCalculo + " <br><br> Respuesta: <br> " +  StrRespuesta);
             });
         } catch (error) {

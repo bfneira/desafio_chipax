@@ -4,9 +4,9 @@ const CallPersonajes = {
     async getLocation(UrlRequest,res) {
         try
         {
-            //llamada de tipo await para esperar la respuesta de la api
+            //Llamada de tipo sincrono para esperar la respuesta de la API
             let jsonResults =  await fnc.CallApiRequest(UrlRequest,res);
-            //capturo la información que necesito del json response
+            //Capturo la información que necesito del json
             let StrCharacterName = jsonResults['name'];
             let StrLocationOrigin = jsonResults['origin']['name'];
             //Retorno origen personaje
@@ -17,5 +17,5 @@ const CallPersonajes = {
     },
 }
 
-//exporto el controlador
+//Exporto el controlador
 module.exports = CallPersonajes;

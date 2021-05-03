@@ -15,7 +15,7 @@ const controller_desafio = require("../controller/ControllerDesafio");
     done();
   });
 
-  test('GET / función para buscar cantidad de veces un caracter.', async (done) => {
+  test('GET / función para buscar la cantidad de veces que aparece un caracter.', async (done) => {
     const res = mockResponse();
 
     var intCount =  await fnc.ContarCaracteres("VALOR","L", res);;
@@ -24,7 +24,7 @@ const controller_desafio = require("../controller/ControllerDesafio");
     done();
   });
 
-  test('GET / Busca el lugar de origen de un personaje.', async (done) => {
+  test('GET / busca el lugar de origen de un personaje.', async (done) => {
     const res = mockResponse();
 
     var StrResponse =  await controller_other.getLocation("https://rickandmortyapi.com/api/character/2", res);;
@@ -33,7 +33,7 @@ const controller_desafio = require("../controller/ControllerDesafio");
     done();
   });
 
-  test('GET / Valida que este operando el desafio 1.', async (done) => {
+  test('GET / valida que esté funcionado el desafío 1.', async (done) => {
     let req = mockRequest();
     req.params.id = null;
     const res = mockResponse();
@@ -43,7 +43,7 @@ const controller_desafio = require("../controller/ControllerDesafio");
     done();
   });
 
-  test('GET / Valida que este operando el desafio 2.', async (done) => {
+  test('GET / valida que este funcionado el desafío 2.', async (done) => {
     let req = mockRequest();
     req.params.id = null;
     const res = mockResponse();
