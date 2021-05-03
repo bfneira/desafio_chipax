@@ -53,7 +53,7 @@ Para entrar al segundo desafío se debe llamar la ejecución del segu
     - `routestwo.js`: ruta para el desafio 2.
 3. controller: Carpeta para definir los controladores, la raíz es `./controller/`
     - `callrequest.js`: controlador con 2 metodos:
-            * `getdesafio1`: para llamar al desafio 1
+            * `getdesafio1`: para llamar al desafio 1.
             * `getdesafio1`: para invocar al segundo desafio.
     - `controllerdesafio.js`: controlador para invocar a los controllers antes definidos en loop segun la petición.
 4. funciones: carpeta para definir las funciones de la aplicación, la raíz es `./function/`
